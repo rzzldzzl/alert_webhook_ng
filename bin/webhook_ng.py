@@ -4,7 +4,12 @@ import urllib2
 import csv
 import gzip
 from collections import OrderedDict
+import CsvResultParser
 
+def getResults(results_file):
+  parser = CsvResultParser.CsvResultParser(results_file)
+  results = parser.getResults()
+  return results
 
 def send_webhook_request(url, body, user_agent=None):
     if url is None:
@@ -40,11 +45,9 @@ if __name__ == "__main__":
         body = OrderedDict(
             sid=settings.get('sid'),
             search_name=settings.get('search_name'),
-            app=settings.get('app'),
-            owner=settings.get('owner'),
-            results_link=settings.get('results_link'),
-            result=settings.get('result')
+            results=getResults(settings.get('results_file'))
         )
+        body.update(eval(settings['configuration'].get('metadata_json')))
         user_agent = settings['configuration'].get('user_agent', 'Splunk')
         if not send_webhook_request(url, json.dumps(body), user_agent=user_agent):
             sys.exit(2)

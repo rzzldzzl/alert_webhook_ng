@@ -12,10 +12,29 @@
                 Specified URL to send JSON payload via HTTP POST
                 (ex., https://your.server.com/api/v1/webhook). 
                 <br />
-                <a href="{{SPLUNKWEB_URL_PREFIX}}/help?location=learnmore.alert.action.webhook" target="_blank"
+                <a href="https://github.com/rzzldzzl/alert_webhook_ng" target="_blank"
                    title="Splunk help">Learn More <i class="icon-external"></i></a>
-                
+
             </span>
         </div>
     </div>
+
+    <div class="control-group">
+        <label class="control-label" for="webhook_ng_metadata_json">Metadata</label>
+        <div class="controls">
+            <input type="text" class="input-xlarge" name="action.webhook_ng.param.metadata_json" id="webhook_ng_metadata_json" placeholder="{'trigger_time':'$trigger_time$','app':'$app$'}" />
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <span class="help-block" style="display: block; position: static; width: auto; margin-left: 0;">
+                Optional: Metadata in JSON format.  ex. -
+                <br />
+                {'trigger_time':'$trigger_time$','app':'$app$','owner':'$owner$'}
+                <br />
+                <a href="https://docs.splunk.com/Documentation/Splunk/latest/AdvancedDev/ModAlertsLog#Pass_search_result_values_to_alert_action_tokens" title="Splunk help">Pass search result values to alert action tokens <i class="icon-external"></i></a>
+            </span>
+        </div>
+    </div>
+
 </form>
