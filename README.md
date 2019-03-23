@@ -23,7 +23,7 @@ index=_internal sourcetype=splunkd OR sourcetype=splunkd_access
 2019-03-22 19:05:00.000 CDT splunkd          929
 2019-03-22 19:05:00.000 CDT splunkd_access    19
 ```
-Output:
+POST Data:
 ```
 {
   "sid": "1553300107.105",
