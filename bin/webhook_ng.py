@@ -1,9 +1,10 @@
 import sys
 import json
-import urllib2
 import csv
 import gzip
 from collections import OrderedDict
+from future.moves.urllib.request import urlopen, Request
+from future.moves.urllib.error import HTTPError, URLError
 import CsvResultParser
 
 def getResults(results_file):
@@ -13,44 +14,51 @@ def getResults(results_file):
 
 def send_webhook_request(url, body, user_agent=None):
     if url is None:
-        print >> sys.stderr, "ERROR No URL provided"
+        sys.stderr.write("ERROR No URL provided\n")
         return False
-    print >> sys.stderr, "INFO Sending POST request to url=%s with size=%d bytes payload" % (url, len(body))
-    print >> sys.stderr, "DEBUG Body: %s" % body
+    sys.stderr.write("INFO Sending POST request to url=%s with size=%d bytes payload\n" % (url, len(body)))
+    sys.stderr.write("DEBUG Body: %s\n" % body)
     try:
-        req = urllib2.Request(url, body, {"Content-Type": "application/json", "User-Agent": user_agent})
-        res = urllib2.urlopen(req)
+        if sys.version_info >= (3, 0) and type(body) == str:
+            body = body.encode()
+        req = Request(url, body, {"Content-Type": "application/json", "User-Agent": user_agent})
+        res = urlopen(req)
         if 200 <= res.code < 300:
-            print >> sys.stderr, "INFO Webhook receiver responded with HTTP status=%d" % res.code
+            sys.stderr.write("INFO Webhook receiver responded with HTTP status=%d\n" % res.code)
             return True
         else:
-            print >> sys.stderr, "ERROR Webhook receiver responded with HTTP status=%d" % res.code
+            sys.stderr.write("ERROR Webhook receiver responded with HTTP status=%d\n" % res.code)
             return False
-    except urllib2.HTTPError, e:
-        print >> sys.stderr, "ERROR Error sending webhook request: %s" % e
-    except urllib2.URLError, e:
-        print >> sys.stderr, "ERROR Error sending webhook request: %s" % e
-    except ValueError, e:
-        print >> sys.stderr, "ERROR Invalid URL: %s" % e
+    except HTTPError as e:
+        sys.stderr.write("ERROR Error sending webhook request: %s\n" % e)
+    except URLError as e:
+        sys.stderr.write("ERROR Error sending webhook request: %s\n" % e)
+    except ValueError as e:
+        sys.stderr.write("ERROR Invalid URL: %s\n" % e)
     return False
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 2 or sys.argv[1] != "--execute":
-        print >> sys.stderr, "FATAL Unsupported execution mode (expected --execute flag)"
+        sys.stderr.write("FATAL Unsupported execution mode (expected --execute flag)\n")
         sys.exit(1)
     try:
         settings = json.loads(sys.stdin.read())
         url = settings['configuration'].get('url')
+        sys.stderr.write(f"XXXX: ${settings.get('results_file')}")
         body = OrderedDict(
             sid=settings.get('sid'),
             search_name=settings.get('search_name'),
             results=getResults(settings.get('results_file'))
+            #app=settings.get('app'),
+            #owner=settings.get('owner'),
+            #results_link=settings.get('results_link'),
+            #result=settings.get('result')
         )
         body.update(eval(settings['configuration'].get('metadata_json')))
         user_agent = settings['configuration'].get('user_agent', 'Splunk')
         if not send_webhook_request(url, json.dumps(body), user_agent=user_agent):
             sys.exit(2)
-    except Exception, e:
-        print >> sys.stderr, "ERROR Unexpected error: %s" % e
+    except Exception as e:
+        sys.stderr.write("ERROR Unexpected error: %s\n" % e)
         sys.exit(3)
