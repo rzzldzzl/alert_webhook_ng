@@ -2,7 +2,7 @@
 
 Modified Splunk webhook alert action to send all results.
 
-See: https://docs.splunk.com/Documentation/Splunk/7.2.5/Alert/Webhooks
+See: https://docs.splunk.com/Documentation/Splunk/latest/Alert/Webhooks
 
 CsvResultParser.py borrowed from: https://github.com/simcen/alert_manager/blob/develop/src/bin/lib/CsvResultParser.py
 

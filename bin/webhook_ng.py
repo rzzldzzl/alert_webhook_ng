@@ -45,7 +45,6 @@ if __name__ == "__main__":
     try:
         settings = json.loads(sys.stdin.read())
         url = settings['configuration'].get('url')
-        sys.stderr.write(f"XXXX: ${settings.get('results_file')}")
         body = OrderedDict(
             sid=settings.get('sid'),
             search_name=settings.get('search_name'),
