@@ -14,7 +14,7 @@ Example:
 index=_internal sourcetype=splunkd OR sourcetype=splunkd_access
 | bin span=5m _time
 | stats count by _time sourcetype
-| sendalert webhook_ng param.url="<URL>" param.metadata_json="{'trigger_time':'$trigger_time$','app':'$app$','foo':'bar'}"
+| sendalert webhook_ng param.url="https://webhook.site/<token>" param.metadata_json="{'trigger_time':'$trigger_time$','app':'$app$','foo':'bar'}"
 
            _time              sourcetype   count
 --------------------------- -------------- -----
