@@ -2,7 +2,7 @@
 
 Modified Splunk webhook alert action to send all results.
 
-See: https://docs.splunk.com/Documentation/Splunk/7.2.5/Alert/Webhooks
+See: https://docs.splunk.com/Documentation/Splunk/latest/Alert/Webhooks
 
 CsvResultParser.py borrowed from: https://github.com/simcen/alert_manager/blob/develop/src/bin/lib/CsvResultParser.py
 
@@ -14,7 +14,7 @@ Example:
 index=_internal sourcetype=splunkd OR sourcetype=splunkd_access
 | bin span=5m _time
 | stats count by _time sourcetype
-| sendalert webhook_ng param.url="<URL>" param.metadata_json="{'trigger_time':'$trigger_time$','app':'$app$','foo':'bar'}"
+| sendalert webhook_ng param.url="https://webhook.site/<token>" param.metadata_json="{'trigger_time':'$trigger_time$','app':'$app$','foo':'bar'}"
 
            _time              sourcetype   count
 --------------------------- -------------- -----
